@@ -23,6 +23,7 @@ library
   exposed-modules:
       Lib
       ChMonoid.Optional
+      ChFunctor
   other-modules:
       Paths_haskellbook
   hs-source-dirs:
@@ -50,6 +51,7 @@ test-suite haskellbook-test
   main-is: Spec.hs
   other-modules:
       ChMonoid.OptionalSpec
+      ChFunctorSpec
       Paths_haskellbook
   hs-source-dirs:
       test

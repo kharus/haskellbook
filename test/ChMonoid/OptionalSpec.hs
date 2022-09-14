@@ -82,6 +82,33 @@ spec = do
     it "(g <> f) 1" $ do
       unCombine (g <> f) 1 `shouldBe` Sum {getSum = 2}
 
+  describe "Testing Semigroup Validation" $ do
+    it "success <> failure" $ do
+      Success 1 <> Failure "blah" `shouldBe` Success 1
+    it " failure <> failure" $ do
+      Failure "woot" <> Failure "blah" `shouldBe` (Failure "wootblah" :: Validation String Integer)
+    it "success <> success" $ do
+      Success 1 <> Success 2 `shouldBe` (Success 1 :: Validation String Integer)
+    it "failure <> success" $ do
+     Failure "woot" <> Success 2 `shouldBe` Success 2
+
+  describe "Testing Monoid Mem" $ do
+    let
+      f' = Mem $ \s -> ("hi", s + 1)
+      rmzero = runMem mempty 0
+      rmleft = runMem (f' <> mempty) 0
+      rmright = runMem (mempty <> f') 0
+    it "rmleft" $ do
+      rmleft `shouldBe` ("hi",1)
+    it "rmright" $ do
+      rmright `shouldBe` ("hi",1)
+    it "rmzero" $ do
+      (rmzero :: (String, Int)) `shouldBe` ("",0)
+    it "failure <> success" $ do
+     runMem f' 0 `shouldBe` rmleft
+    it "failure <> success" $ do
+     runMem f' 0 `shouldBe` rmright
+
   context "Monoid String" $ do
     prop "associative" (semigroupAssoc :: String -> String -> String -> Expectation)
     prop "Left Identity" (monoidLeftIdentity :: String -> Expectation)
@@ -100,18 +127,30 @@ spec = do
   describe "Type Trivial" $ do
     context "Semigroup properties" $ do
       prop "associative" (semigroupAssoc :: Trivial -> Trivial -> Trivial -> Expectation)
+    context "Monoid properties" $ do
+      prop "Left Identity" (monoidLeftIdentity :: Trivial -> Expectation)
+      prop "Right Identity" (monoidRightIdentity :: Trivial -> Expectation)
 
   describe "Type Identity" $ do
     context "Semigroup properties" $ do
-      prop "associative" (semigroupAssoc :: Identity Integer -> Identity Integer -> Identity Integer -> Expectation)
+      prop "associative" (semigroupAssoc :: Identity String -> Identity String -> Identity String -> Expectation)
+    context "Monoid properties" $ do
+      prop "Left Identity" (monoidLeftIdentity :: Identity String -> Expectation)
+      prop "Right Identity" (monoidRightIdentity :: Identity String -> Expectation)
 
   describe "Type BoolConj" $ do
     context "Semigroup properties" $ do
       prop "associative" (semigroupAssoc :: BoolConj -> BoolConj -> BoolConj -> Expectation)
+    context "Monoid properties" $ do
+      prop "Left Identity" (monoidLeftIdentity :: BoolConj -> Expectation)
+      prop "Right Identity" (monoidRightIdentity :: BoolConj -> Expectation)
 
   describe "Type BoolDisj" $ do
     context "Semigroup properties" $ do
       prop "associative" (semigroupAssoc :: BoolDisj -> BoolDisj -> BoolDisj -> Expectation)
+    context "Monoid properties" $ do
+      prop "Left Identity" (monoidLeftIdentity :: BoolDisj -> Expectation)
+      prop "Right Identity" (monoidRightIdentity :: BoolDisj -> Expectation)
 
   describe "Type Or" $ do
     context "Semigroup properties" $ do
@@ -120,3 +159,7 @@ spec = do
   describe "Type Combine" $ do
     it "Semigroup properties" $ do
       quickCheck (semigroupAssocFun :: String -> String -> String -> Integer -> Expectation)
+
+  describe "Type Validation" $ do
+    context "Semigroup properties" $ do
+      prop "associative" (semigroupAssoc :: Validation String Integer -> Validation String Integer -> Validation String Integer -> Expectation)
