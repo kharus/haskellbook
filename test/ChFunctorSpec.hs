@@ -31,3 +31,31 @@ spec = do
   context "Functor Identity" $ do
     prop "Identity" (functorIdentity :: Identity Int -> Bool)
     prop "Compose" (functorCompose (+1) (*2) :: Identity Int -> Bool)
+
+  context "Functor Pair" $ do
+    prop "Identity" (functorIdentity :: Pair Int -> Bool)
+    prop "Compose" (functorCompose (+1) (*2) :: Pair Int -> Bool)
+
+  context "Functor Two" $ do
+    prop "Identity" (functorIdentity :: Two Int Int -> Bool)
+    prop "Compose" (functorCompose (+1) (*2) ::  Two Int Int -> Bool)
+
+  context "Functor Three" $ do
+    prop "Identity" (functorIdentity :: Three Int Int Int -> Bool)
+    prop "Compose" (functorCompose (+1) (*2) ::  Three Int Int Int-> Bool)
+
+  context "Functor Three'" $ do
+    prop "Identity" (functorIdentity :: Three' Int Int -> Bool)
+    prop "Compose" (functorCompose (+1) (*2) ::  Three' Int Int-> Bool)
+
+  context "Functor Four" $ do
+    prop "Identity" (functorIdentity :: Four Int Int Int Int -> Bool)
+    prop "Compose" (functorCompose (+1) (*2) ::  Four Int Int Int Int -> Bool)
+
+  context "Functor Four'" $ do
+    prop "Identity" (functorIdentity :: Four' Int Int -> Bool)
+    prop "Compose" (functorCompose (+1) (*2) ::  Four' Int Int -> Bool)
+
+  context "Functor Possibly'" $ do
+    prop "Identity" (functorIdentity :: Possibly Int -> Bool)
+    prop "Compose" (functorCompose (+1) (*2) ::  Possibly Int -> Bool)
