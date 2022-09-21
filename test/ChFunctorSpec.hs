@@ -9,6 +9,9 @@ import Test.Hspec
 import Test.Hspec.QuickCheck (prop)
 import Test.QuickCheck (quickCheck)
 import ChFunctor
+import Types.Identity
+import Test.QuickCheck.Classes
+import Test.Hspec.Checkers (testBatch)
 
 functorIdentity :: (Functor f, Eq (f a)) => f a -> Bool
 functorIdentity f = fmap id f == f
@@ -24,13 +27,12 @@ spec = do
     it "Sum" $ do
       fmap (fmap (++ "lol")) (Just ["Hi,", "Hello"]) `shouldBe` Just ["Hi,lol","Hellolol"]
 
-  context "Functor List" $ do
-    prop "Identity" (functorIdentity :: [Int] -> Bool)
-    prop "Compose" (functorCompose (+1) (*2) :: [Int] -> Bool)
-
-  context "Functor Identity" $ do
-    prop "Identity" (functorIdentity :: Identity Int -> Bool)
-    prop "Compose" (functorCompose (+1) (*2) :: Identity Int -> Bool)
+  describe "Identity" $ do
+    testBatch (semigroup (undefined :: Identity String, 1::Int))
+    testBatch (monoid (undefined :: Identity String))
+    testBatch (functor (undefined :: Identity (String, String, Int)))
+    testBatch (applicative (undefined :: Identity (String, String, Int)))
+    testBatch (monad (undefined :: Identity (String, String, Int)))
 
   context "Functor Pair" $ do
     prop "Identity" (functorIdentity :: Pair Int -> Bool)
@@ -59,3 +61,19 @@ spec = do
   context "Functor Possibly'" $ do
     prop "Identity" (functorIdentity :: Possibly Int -> Bool)
     prop "Compose" (functorCompose (+1) (*2) ::  Possibly Int -> Bool)
+
+  describe "MyList" $ do
+    testBatch (monoid Twoo)
+
+  describe "MyList" $ do
+    testBatch (applicative (undefined :: List (String, String, Int)))
+
+  describe "Sum" $ do
+    testBatch (functor (undefined :: Sum String (String, String, Int)))
+    testBatch (applicative (undefined :: Sum String (String, String, Int)))
+    testBatch (monad (undefined :: Sum String (String, String, Int)))
+
+  describe "Nope" $ do
+    testBatch (functor (undefined :: Nope  (String, String, Int)))
+    testBatch (applicative (undefined :: Nope  (String, String, Int)))
+    testBatch (monad (undefined :: Nope (String, String, Int)))

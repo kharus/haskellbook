@@ -9,6 +9,7 @@ import Test.Hspec
 import Data.Monoid
 import Test.Hspec.QuickCheck (prop)
 import ChMonoid.Optional
+import Types.Identity 
 import Test.QuickCheck (quickCheck)
 
 semigroupAssoc :: (Semigroup m, Show m, Eq m) => m -> m -> m -> Expectation
@@ -130,13 +131,6 @@ spec = do
     context "Monoid properties" $ do
       prop "Left Identity" (monoidLeftIdentity :: Trivial -> Expectation)
       prop "Right Identity" (monoidRightIdentity :: Trivial -> Expectation)
-
-  describe "Type Identity" $ do
-    context "Semigroup properties" $ do
-      prop "associative" (semigroupAssoc :: Identity String -> Identity String -> Identity String -> Expectation)
-    context "Monoid properties" $ do
-      prop "Left Identity" (monoidLeftIdentity :: Identity String -> Expectation)
-      prop "Right Identity" (monoidRightIdentity :: Identity String -> Expectation)
 
   describe "Type BoolConj" $ do
     context "Semigroup properties" $ do
