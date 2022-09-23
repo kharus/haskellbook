@@ -10,6 +10,10 @@ import Test.Hspec.QuickCheck (prop)
 import Test.QuickCheck (quickCheck)
 import ChFunctor
 import Types.Identity
+import Types.BahEither
+import Types.List
+import Types.Constant
+import Types.Two
 import Test.QuickCheck.Classes
 import Test.Hspec.Checkers (testBatch)
 
@@ -66,7 +70,9 @@ spec = do
     testBatch (monoid Twoo)
 
   describe "MyList" $ do
+    testBatch (functor (undefined :: List (String, String, Int)))
     testBatch (applicative (undefined :: List (String, String, Int)))
+    testBatch (monad (undefined :: List (String, String, Int)))
 
   describe "Sum" $ do
     testBatch (functor (undefined :: Sum String (String, String, Int)))
@@ -77,3 +83,16 @@ spec = do
     testBatch (functor (undefined :: Nope  (String, String, Int)))
     testBatch (applicative (undefined :: Nope  (String, String, Int)))
     testBatch (monad (undefined :: Nope (String, String, Int)))
+
+  describe "BahEither" $ do
+    testBatch (functor (undefined :: BahEither String (String, String, Int)))
+    testBatch (applicative (undefined :: BahEither String (String, String, Int)))
+    testBatch (monad (undefined :: BahEither String (String, String, Int)))
+  
+  describe "Constant" $ do
+    testBatch (functor (undefined :: Constant String (String, String, Int)))
+    testBatch (applicative (undefined :: Constant String (String, String, Int)))
+
+  describe "Two" $ do
+    testBatch (functor (undefined :: Two String (String, String, Int)))
+    testBatch (applicative (undefined :: Two String (String, String, Int)))

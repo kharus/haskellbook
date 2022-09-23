@@ -14,15 +14,6 @@ instance Functor Pair where
 instance Arbitrary a => Arbitrary (Pair a) where
   arbitrary = liftA2 Pair arbitrary arbitrary
 
-data Two a b = Two a b
-    deriving (Eq, Show)
-
-instance Functor (Two a) where
-    fmap f (Two x y) = Two x (f y)
-
-instance (Arbitrary a, Arbitrary b) => Arbitrary (Two a b) where
-  arbitrary = liftA2 Two arbitrary arbitrary
-
 data Three a b c = Three a b c
     deriving (Eq, Show)
 
@@ -69,16 +60,6 @@ instance Functor Possibly where
 instance (Arbitrary a) => Arbitrary (Possibly a) where
   arbitrary = frequency [(1, return LolNope), (3, fmap Yeppers arbitrary)]
 
-newtype Constant a b = Constant { getConstant :: a }
-    deriving (Eq, Ord, Show)
-
-instance Functor (Constant a) where
-    fmap _ (Constant x)= Constant x
-
-instance Monoid a => Applicative (Constant a) where
-    pure _ = Constant mempty
-    (Constant a) <*> (Constant b) = Constant (a<>b)
-
 data Bull = Fools | Twoo
     deriving (Eq, Show)
 
@@ -95,38 +76,6 @@ instance Monoid Bull where
 -- EqProp is from the checkers library
 instance EqProp Bull where
     (=-=) = eq
-
-data List a = Nil | Cons a (List a)
-    deriving (Eq, Show)
-
-append :: List a -> List a -> List a
-append Nil ys = ys
-append (Cons x xs) ys = Cons x $ xs `append` ys
-
-fold :: (a -> b -> b) -> b -> List a -> b
-fold _ b Nil = b
-fold f b (Cons h t) = f h (fold f b t)
-
-concat' :: List (List a) -> List a
-concat' = fold append Nil
-
-flatMap :: (a -> List b) -> List a -> List b
-flatMap f as = concat' $ fmap f as
-
-instance Functor List where
-    fmap _ Nil = Nil
-    fmap f (Cons x xs) = Cons (f x) (fmap f xs)
-
-instance Applicative List where
-    pure x = Cons x Nil
-    Nil <*> _ = Nil
-    (Cons f fs) <*> xs = append (fmap f xs) (fs <*> xs)
-
-instance Eq a => EqProp (List a) where
-    (=-=) = eq
-
-instance (Arbitrary a) => Arbitrary (List a) where
-  arbitrary =  frequency [(1, return Nil), (5, fmap (`Cons` Nil) arbitrary)]
 
 bind :: Monad m => (a -> m b) -> m a -> m b
 bind f x = join $ fmap f x
@@ -175,3 +124,8 @@ instance (Eq a) => EqProp (Nope a) where
 
 instance (Arbitrary a) => Arbitrary (Nope a) where
   arbitrary = return NopeDotJpg
+
+j :: Monad m => m (m a) -> m a
+j m = do
+    m2 <- m
+    m2

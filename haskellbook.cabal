@@ -25,6 +25,10 @@ library
       ChMonoid.Optional
       ChFunctor
       Types.Identity
+      Types.BahEither
+      Types.List
+      Types.Constant
+      Types.Two
   other-modules:
       Paths_haskellbook
   hs-source-dirs:
