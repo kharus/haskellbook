@@ -14,6 +14,8 @@ import Types.BahEither
 import Types.List
 import Types.Constant
 import Types.Two
+import Types.Three
+import Types.Four
 import Test.QuickCheck.Classes
 import Test.Hspec.Checkers (testBatch)
 
@@ -45,18 +47,6 @@ spec = do
   context "Functor Two" $ do
     prop "Identity" (functorIdentity :: Two Int Int -> Bool)
     prop "Compose" (functorCompose (+1) (*2) ::  Two Int Int -> Bool)
-
-  context "Functor Three" $ do
-    prop "Identity" (functorIdentity :: Three Int Int Int -> Bool)
-    prop "Compose" (functorCompose (+1) (*2) ::  Three Int Int Int-> Bool)
-
-  context "Functor Three'" $ do
-    prop "Identity" (functorIdentity :: Three' Int Int -> Bool)
-    prop "Compose" (functorCompose (+1) (*2) ::  Three' Int Int-> Bool)
-
-  context "Functor Four" $ do
-    prop "Identity" (functorIdentity :: Four Int Int Int Int -> Bool)
-    prop "Compose" (functorCompose (+1) (*2) ::  Four Int Int Int Int -> Bool)
 
   context "Functor Four'" $ do
     prop "Identity" (functorIdentity :: Four' Int Int -> Bool)
@@ -96,3 +86,24 @@ spec = do
   describe "Two" $ do
     testBatch (functor (undefined :: Two String (String, String, Int)))
     testBatch (applicative (undefined :: Two String (String, String, Int)))
+    testBatch (foldable (undefined :: Two String (String, String, String, Int, String)))
+
+  describe "Three" $ do
+    testBatch (functor (undefined :: Three String String (String, String, Int)))
+    testBatch (applicative (undefined :: Three String String (String, String, Int)))
+    testBatch (foldable (undefined :: Three String String (String, String, String, Int, String)))
+
+  describe "Three'" $ do
+    testBatch (functor (undefined :: Three' String (String, String, Int)))
+    testBatch (applicative (undefined :: Three' String (String, String, Int)))
+    testBatch (foldable (undefined :: Three' String (String, String, String, Int, String)))
+
+  describe "Four" $ do
+    testBatch (functor (undefined :: Four String String String (String, String, Int)))
+    testBatch (applicative (undefined :: Four String String String (String, String, Int)))
+    testBatch (foldable (undefined :: Four String String String (String, String, String, Int, String)))
+
+  describe "Four'" $ do
+    testBatch (functor (undefined :: Four' String (String, String, Int)))
+    testBatch (applicative (undefined :: Four' String (String, String, Int)))
+    testBatch (foldable (undefined :: Four' String (String, String, String, Int, String)))

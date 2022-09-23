@@ -13,6 +13,9 @@ instance Monoid a => Applicative (Two a) where
     pure x = Two mempty x
     (Two a1 f) <*> (Two a2 x) = Two (a1 <> a2) (f x)
 
+instance Foldable (Two a) where
+    foldMap f (Two _ b) = f b
+
 instance (Arbitrary a, Arbitrary b) => Arbitrary (Two a b) where
   arbitrary = liftA2 Two arbitrary arbitrary
 

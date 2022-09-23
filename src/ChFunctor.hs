@@ -14,42 +14,6 @@ instance Functor Pair where
 instance Arbitrary a => Arbitrary (Pair a) where
   arbitrary = liftA2 Pair arbitrary arbitrary
 
-data Three a b c = Three a b c
-    deriving (Eq, Show)
-
-instance Functor (Three a b) where
-    fmap f (Three x y z) = Three x y (f z)
-
-instance (Arbitrary a, Arbitrary b, Arbitrary c) => Arbitrary (Three a b c) where
-  arbitrary = liftA3 Three arbitrary arbitrary arbitrary
-
-data Three' a b = Three' a b b
-    deriving (Eq, Show)
-
-instance Functor (Three' a) where
-    fmap f (Three' x y z) = Three' x (f y) (f z)
-
-instance (Arbitrary a, Arbitrary b) => Arbitrary (Three' a b) where
-  arbitrary = liftA3 Three' arbitrary arbitrary arbitrary
-
-data Four a b c d = Four a b c d
-    deriving (Eq, Show)
-
-instance Functor (Four a b c) where
-    fmap f (Four x y z w) = Four x y z (f w)
-
-instance (Arbitrary a, Arbitrary b, Arbitrary c, Arbitrary d) => Arbitrary (Four a b c d) where
-  arbitrary = Four <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary
-
-data Four' a b = Four' a a a b
-    deriving (Eq, Show)
-
-instance Functor (Four' a) where
-    fmap f (Four' x y z w) = Four' x y z (f w)
-
-instance (Arbitrary a, Arbitrary b) => Arbitrary (Four' a b) where
-  arbitrary = Four' <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary
-
 data Possibly a = LolNope | Yeppers a
     deriving (Eq, Show)
 
@@ -129,3 +93,9 @@ j :: Monad m => m (m a) -> m a
 j m = do
     m2 <- m
     m2
+
+filterF :: ( Applicative f, Foldable t, Monoid (f a)) => (a -> Bool) -> t a -> f a
+filterF f = foldMap (\x -> if f x then pure x else mempty)
+
+filterFq :: (Bool -> Bool) -> [Bool] -> [Bool]
+filterFq = filterF

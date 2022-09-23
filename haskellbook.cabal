@@ -29,6 +29,8 @@ library
       Types.List
       Types.Constant
       Types.Two
+      Types.Three
+      Types.Four
   other-modules:
       Paths_haskellbook
   hs-source-dirs:
