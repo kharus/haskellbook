@@ -31,6 +31,10 @@ library
       Types.Two
       Types.Three
       Types.Four
+      Types.Pair
+      Types.Big
+      Types.SkiFree
+      Types.Tree
   other-modules:
       Paths_haskellbook
   hs-source-dirs:

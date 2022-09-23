@@ -2,6 +2,7 @@ module Types.List where
 
 import Test.QuickCheck.Checkers
 import Test.QuickCheck
+import Control.Applicative
 
 data List a = Nil | Cons a (List a)
     deriving (Eq, Show)
@@ -33,6 +34,14 @@ instance Monad List where
     return = pure
     Nil >>= _ = Nil
     (Cons x xs) >>= f = append (f x) (xs >>= f)
+
+instance Foldable List where
+    foldMap _ Nil = mempty
+    foldMap f (Cons x xs) = f x <> foldMap f xs
+
+instance Traversable List where
+    traverse _ Nil = pure Nil
+    traverse f (Cons x xs) = liftA2 Cons (f x) (traverse f xs)
 
 instance Eq a => EqProp (List a) where
     (=-=) = eq

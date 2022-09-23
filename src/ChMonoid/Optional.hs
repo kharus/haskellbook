@@ -1,15 +1,35 @@
 module ChMonoid.Optional (module ChMonoid.Optional) where
 import Test.QuickCheck ( frequency, Arbitrary(arbitrary) )
+import Test.QuickCheck.Checkers
+
 data Optional a = Nada | Only a deriving (Eq, Show)
 
-instance Semigroup  a => Semigroup (Optional a) where
+instance Semigroup a => Semigroup (Optional a) where
     (Only x) <> Nada = Only x
     Nada <> (Only x) = Only x
     (Only x) <> (Only y)= Only (x <> y)
     _ <> _ = Nada
 
-instance Monoid a => Monoid (Optional a) where
-    mempty = Only mempty
+instance Semigroup a => Monoid (Optional a) where
+    mempty = Nada
+
+instance Functor Optional where
+    fmap _ Nada = Nada
+    fmap f (Only a) = Only (f a)
+
+instance Foldable Optional where
+    foldMap _ Nada = mempty
+    foldMap f (Only a) = f a
+
+instance Traversable Optional where
+    traverse _ Nada = pure Nada
+    traverse f (Only a) = Only <$> f a
+
+instance Eq a => EqProp (Optional a) where
+    (=-=) = eq
+
+instance Arbitrary a => Arbitrary (Optional a) where
+  arbitrary = frequency [ (1, return Nada) , (1, Only <$> arbitrary) ]
 
 data Bull = Fools | Twoo deriving (Eq, Show)
 

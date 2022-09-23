@@ -5,15 +5,6 @@ import Control.Applicative
 import Test.QuickCheck.Checkers (EqProp, (=-=), eq)
 import Control.Monad (join)
 
-data Pair a = Pair a a
-    deriving (Eq, Show)
-
-instance Functor Pair where
-    fmap f (Pair x y) = Pair (f x) (f y)
-
-instance Arbitrary a => Arbitrary (Pair a) where
-  arbitrary = liftA2 Pair arbitrary arbitrary
-
 data Possibly a = LolNope | Yeppers a
     deriving (Eq, Show)
 

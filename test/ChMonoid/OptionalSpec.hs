@@ -11,6 +11,8 @@ import Test.Hspec.QuickCheck (prop)
 import ChMonoid.Optional
 import Types.Identity 
 import Test.QuickCheck (quickCheck)
+import Test.QuickCheck.Classes
+import Test.Hspec.Checkers (testBatch)
 
 semigroupAssoc :: (Semigroup m, Show m, Eq m) => m -> m -> m -> Expectation
 semigroupAssoc a b c = (a <> b) <> c `shouldBe` a <> (b <> c)
@@ -157,3 +159,10 @@ spec = do
   describe "Type Validation" $ do
     context "Semigroup properties" $ do
       prop "associative" (semigroupAssoc :: Validation String Integer -> Validation String Integer -> Validation String Integer -> Expectation)
+  
+  describe "Optional" $ do
+    testBatch (semigroup (undefined :: Optional String, 1::Int))
+    testBatch (monoid (undefined :: Optional String))
+    testBatch (functor (undefined :: Optional (String, String, Int)))
+    testBatch (foldable (undefined :: Optional (String, String, String, Int, String)))
+    testBatch (traversable (undefined :: Optional (String, String, String)))

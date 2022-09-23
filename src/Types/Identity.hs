@@ -22,6 +22,12 @@ instance Monad Identity where
     return = pure
     (Identity x) >>= f = f x
 
+instance Foldable Identity where
+    foldMap f (Identity a) = f a
+
+instance Traversable Identity where
+    traverse f (Identity a) = Identity <$> f a
+
 instance Arbitrary a => Arbitrary (Identity a) where
   arbitrary = do
     Identity <$> arbitrary
