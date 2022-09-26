@@ -35,6 +35,7 @@ library
       Types.Big
       Types.SkiFree
       Types.Tree
+      Types.Moi
   other-modules:
       Paths_haskellbook
   hs-source-dirs:

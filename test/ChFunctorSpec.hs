@@ -20,6 +20,7 @@ import Types.Four
 import Types.Big
 import Types.SkiFree
 import Types.Tree
+import Types.Moi
 import Test.QuickCheck.Classes
 import Test.Hspec.Checkers (testBatch)
 
@@ -32,6 +33,12 @@ functorCompose f g x = (fmap g (fmap f x)) == (fmap (g . f) x)
 spec :: Spec
 spec = do
   describe "Testing Only with Monoids" $ do
+    it "Sum" $ do
+      let
+        f = (+1) <$> (Moi $ \s -> (0, s))
+      runMoi f 0 `shouldBe` (1,0)
+
+  describe "Moi" $ do
     it "Sum" $ do
       (fmap (+1) $ read "[1]" :: [Int]) `shouldBe` [2]
     it "Sum" $ do
