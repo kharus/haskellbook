@@ -67,6 +67,7 @@ test-suite haskellbook-test
   other-modules:
       ChMonoid.OptionalSpec
       ChFunctorSpec
+      ChParserSpec
       Paths_haskellbook
   hs-source-dirs:
       test
@@ -78,4 +79,5 @@ test-suite haskellbook-test
     , QuickCheck
     , checkers
     , hspec-checkers
+    , trifecta
   default-language: Haskell2010
